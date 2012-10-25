@@ -106,7 +106,7 @@ package org.omoa.layer {
 			
 			if (_interactive) {
 				sprite.mouseChildren = true;
-				sprite.addEventListener( MouseEvent.CLICK, symbolClick );
+				sprite.addEventListener( MouseEvent.MOUSE_UP, symbolClick );
 			} else {
 				sprite.mouseChildren = false;
 			}
@@ -225,6 +225,8 @@ package org.omoa.layer {
 						symbol.render( symbolSprite, spaceEntity, transformation );
 					}
 				}
+				
+				symbol.afterRender(symbolSprite);
 				
 				if (symbol.needsTransformation) {
 					symbolSprite.transform.matrix = transformation;

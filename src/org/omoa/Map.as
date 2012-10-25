@@ -158,13 +158,6 @@ package org.omoa {
 			mf = new MapFrame(this);
 			mf.name = name;
 			addMapFrame( mf );
-			/*
-			mapFrames.push( mf );
-			
-			addChild( mf );
-			
-			_mapFrameAddInteractivity( mf );
-			*/
 			
 			layoutMapFrames();
 			
@@ -174,7 +167,7 @@ package org.omoa {
 		/**
 		 * Adds event handlers to a MapFrame.
 		 */
-		private function _mapFrameAddInteractivity( mf:MapFrame ):void {
+		protected function _mapFrameAddInteractivity( mf:MapFrame ):void {
 			mf.buttonMode = true;
 			mf.mouseChildren = true;
 			
@@ -236,6 +229,9 @@ package org.omoa {
 		 * another DisplayObjectContainer and do the layout for yourself.
 		 */
 		public function layoutMapFrames():void {
+			_layoutMapFrames();
+		}
+		protected function _layoutMapFrames():void {
 			var mf:MapFrame;
 			var mfCountChild:int = 0;
 			for each (mf in mapFrames) {
@@ -284,7 +280,7 @@ package org.omoa {
 		private function whileDragging(e:MouseEvent):void {
 			// this is a definitely drag action.
 			// stop drag behaviour...
-			stage.addEventListener(MouseEvent.MOUSE_UP, stopDragging);
+			stage.addEventListener(MouseEvent.MOUSE_UP, stopDragging, true );
 			
 			// ...and remove the normal "click" behaviour
 			if (dragMapFrame) {
@@ -310,9 +306,12 @@ package org.omoa {
 		private function stopDragging(e:MouseEvent):void {
 			// the drag action has ended.
 			var mf:MapFrame;
+			stage.removeEventListener(MouseEvent.MOUSE_UP, stopDragging, true);
+			
 			if (dragMapFrame) {
+				e.stopImmediatePropagation();
 				dragMapFrame.removeEventListener(MouseEvent.MOUSE_MOVE, whileDragging);
-				stage.removeEventListener(MouseEvent.MOUSE_UP, stopDragging);
+				//stage.removeEventListener(MouseEvent.MOUSE_UP, stopDragging);
 				
 				if (synchronizeMapFrames) {
 					dragMapFrame.stopDrag();
@@ -328,8 +327,8 @@ package org.omoa {
 				clickTimer.reset();
 				//stage.quality = StageQuality.HIGH;
 			}
-			e.stopPropagation();
-			e.stopImmediatePropagation();
+			//e.stopPropagation();
+			//e.stopImmediatePropagation();
 			dragMapFrame = null;
 			//TODO: Syncronize mapframes?
 		}
